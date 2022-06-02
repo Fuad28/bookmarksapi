@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from flask_jwt_extended import create_access_token, create_refresh_token
+from flask_jwt_extended import create_access_token, create_refresh_token, jwt_required, get_jwt_identity
 
 from werkzeug.security import check_password_hash, generate_password_hash
 import validators
@@ -72,6 +72,21 @@ def login():
     return jsonify({'error': 'Wrong credentials'}), HTTP_401_UNAUTHORIZED
 
 @auth.get('/me') 
+@jwt_required()
 def me():
-    return {"user": "me"}
+    user_id= get_jwt_identity()
+    user= User.query.get(user_id)
+
+    return jsonify({
+        "username": user.username,
+        "email": user.email
+    }), HTTP_200_OK
+
+@auth.get('/token/refresh')
+@jwt_required(refresh= True)
+def refresh_users_token():
+    user_id= get_jwt_identity()
+    access= create_access_token(identity= user_id)
+
+    return jsonify({"access": access}), HTTP_200_OK
 
