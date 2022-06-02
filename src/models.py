@@ -11,8 +11,8 @@ class User(db.Model):
     username= db.Column(db.String(80), unique=True, nullable=False)
     email= db.Column(db.String(120), unique=True, nullable=False)
     password= db.Column(db.Text, nullable=False)
-    created_at= db.Column(db.DateTime, nullable=False, default=datetime.now)
-    updated_at= db.Column(db.DateTime, nullable=False, onupdate=datetime.now)
+    created_at = db.Column(db.DateTime, default=datetime.now)
+    updated_at = db.Column(db.DateTime, onupdate=datetime.now, default=datetime.now)
     bookmarks= db.relationship('Bookmark', backref='user')
 
     def __str__(self): 
@@ -23,7 +23,7 @@ class Bookmark(db.Model):
     id= db.Column(db.Integer, primary_key=True)
     user_id= db.Column(db.Integer, db.ForeignKey("user.id"))
     body= db.Column(db.Text, nullable= True)
-    url= db.Column(db.Text, nullable= False)
+    url= db.Column(db.Text, nullable= False) 
     short_url= db.Column(db.String(3), nullable= True)
     visits= db.Column(db.Integer, default= 0)
     created_at= db.Column(db.DateTime, nullable=False, default=datetime.now)
