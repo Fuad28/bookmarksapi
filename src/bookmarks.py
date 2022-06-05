@@ -1,5 +1,6 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import get_jwt_identity, jwt_required
+from flasgger import swag_from
 
 from src.constants.http_status_codes import *
 from src.models import Bookmark, db
@@ -147,6 +148,7 @@ def delete_bookmark(id):
 
 @bookmarks.get("/stats")
 @jwt_required()
+@swag_from("./docs/bookmarks/stats.yaml")
 def get_stats():
     current_user = get_jwt_identity()
 
